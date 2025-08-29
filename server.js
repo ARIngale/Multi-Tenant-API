@@ -6,6 +6,7 @@ import cors from "cors"
 
 // Import routes
 import authRoutes from "./routes/auth.js"
+import userRoutes from "./routes/users.js"
 
 dotenv.config({ debug: true })
 
@@ -26,6 +27,7 @@ app.use(cors(corsOptions))
 
 // API routes
 app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/users", userRoutes)
 
 // MongoDB connection
 mongoose
