@@ -3,6 +3,10 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors"
 
+
+// Import routes
+import authRoutes from "./routes/auth.js"
+
 dotenv.config({ debug: true })
 
 const app = express();
@@ -18,6 +22,10 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 }
 app.use(cors(corsOptions))
+
+
+// API routes
+app.use("/api/v1/auth", authRoutes)
 
 // MongoDB connection
 mongoose
