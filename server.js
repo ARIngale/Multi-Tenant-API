@@ -10,6 +10,7 @@ import userRoutes from "./routes/users.js"
 import organizationRoutes from "./routes/organizations.js"
 import projectRoutes from "./routes/projects.js"
 import apiKeyRoutes from "./routes/apiKeys.js"
+import auditRoutes from "./routes/audit.js"
 
 dotenv.config({ debug: true })
 
@@ -34,6 +35,7 @@ app.use("/api/v1/users", userRoutes)
 app.use("/api/v1/organizations", organizationRoutes)
 app.use("/api/v1/projects", projectRoutes)
 app.use("/api/v1/api-keys", apiKeyRoutes)
+app.use("/api/v1/audit", auditRoutes)
 
 // MongoDB connection
 mongoose
