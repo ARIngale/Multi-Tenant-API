@@ -1,0 +1,4 @@
+{"level":"info","message":"Connected to MongoDB","service":"multitenant-api","timestamp":"2025-08-30T05:07:45.036Z"}
+{"level":"info","message":"Server running on port 5000","service":"multitenant-api","timestamp":"2025-08-30T05:07:45.045Z"}
+{"level":"info","message":"Connected to MongoDB","service":"multitenant-api","timestamp":"2025-08-30T05:07:59.650Z"}
+{"level":"info","message":"Server running on port 5000","service":"multitenant-api","timestamp":"2025-08-30T05:07:59.654Z"}
