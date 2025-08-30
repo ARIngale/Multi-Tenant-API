@@ -15,6 +15,7 @@ import externalRoutes from "./routes/external.js"
 
 // Import middleware
 import { errorHandler } from "./middlewares/errorHandler.js"
+import { logUnauthorizedAccess, logRateLimitExceeded } from "./middlewares/auditMiddleware.js"
 
 dotenv.config({ debug: true })
 
@@ -32,6 +33,9 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
+
+app.use(logRateLimitExceeded)
+app.use(logUnauthorizedAccess)
 
 // API routes
 app.use("/api/v1/auth", authRoutes)
