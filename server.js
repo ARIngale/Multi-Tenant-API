@@ -13,6 +13,9 @@ import apiKeyRoutes from "./routes/apiKeys.js"
 import auditRoutes from "./routes/audit.js"
 import externalRoutes from "./routes/external.js"
 
+// Import middleware
+import { errorHandler } from "./middlewares/errorHandler.js"
+
 dotenv.config({ debug: true })
 
 const app = express();
@@ -38,6 +41,9 @@ app.use("/api/v1/projects", projectRoutes)
 app.use("/api/v1/api-keys", apiKeyRoutes)
 app.use("/api/v1/audit", auditRoutes)
 app.use("/api/v1/external", externalRoutes)
+
+// Global error handler
+app.use(errorHandler)
 
 // MongoDB connection
 mongoose
