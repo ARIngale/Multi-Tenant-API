@@ -1,0 +1,954 @@
+{
+    "info": {
+      "name": "Multi-Tenant API",
+      "description": "Comprehensive API collection for the secure multi-tenant Express.js API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "version": "1.0.0"
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": [
+        {
+          "key": "token",
+          "value": "{{jwt_token}}",
+          "type": "string"
+        }
+      ]
+    },
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:3000/api/v1",
+        "type": "string"
+      },
+      {
+        "key": "jwt_token",
+        "value": "",
+        "type": "string"
+      },
+      {
+        "key": "api_key",
+        "value": "",
+        "type": "string"
+      },
+      {
+        "key": "user_id",
+        "value": "",
+        "type": "string"
+      },
+      {
+        "key": "project_id",
+        "value": "",
+        "type": "string"
+      },
+      {
+        "key": "api_key_id",
+        "value": "",
+        "type": "string"
+      }
+    ],
+    "item": [
+      {
+        "name": "Health Check",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{base_url}}/../health",
+            "host": ["{{base_url}}"],
+            "path": ["..", "health"]
+          },
+          "description": "Check API health status"
+        },
+        "response": [
+          {
+            "name": "Health Check Success",
+            "originalRequest": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/../health",
+                "host": ["{{base_url}}"],
+                "path": ["..", "health"]
+              }
+            },
+            "status": "OK",
+            "code": 200,
+            "_postman_previewlanguage": "json",
+            "header": [],
+            "cookie": [],
+            "body": "{\n  \"status\": \"OK\",\n  \"timestamp\": \"2024-01-15T10:30:00.000Z\",\n  \"uptime\": 3600\n}"
+          }
+        ]
+      },
+      {
+        "name": "Authentication",
+        "item": [
+          {
+            "name": "Register User & Organization",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "if (pm.response.code === 201) {",
+                    "    const response = pm.response.json();",
+                    "    pm.collectionVariables.set('jwt_token', response.data.token);",
+                    "    pm.collectionVariables.set('user_id', response.data.user.id);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"admin@testcompany.com\",\n  \"password\": \"AdminPassword123!\",\n  \"firstName\": \"Admin\",\n  \"lastName\": \"User\",\n  \"organizationName\": \"Test Company\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/auth/register",
+                "host": ["{{base_url}}"],
+                "path": ["auth", "register"]
+              },
+              "description": "Register a new user and create organization"
+            },
+            "response": [
+              {
+                "name": "Registration Success",
+                "originalRequest": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"admin@testcompany.com\",\n  \"password\": \"AdminPassword123!\",\n  \"firstName\": \"Admin\",\n  \"lastName\": \"User\",\n  \"organizationName\": \"Test Company\"\n}"
+                  },
+                  "url": {
+                    "raw": "{{base_url}}/auth/register",
+                    "host": ["{{base_url}}"],
+                    "path": ["auth", "register"]
+                  }
+                },
+                "status": "Created",
+                "code": 201,
+                "_postman_previewlanguage": "json",
+                "header": [],
+                "cookie": [],
+                "body": "{\n  \"success\": true,\n  \"message\": \"Registration successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"id\": \"507f1f77bcf86cd799439011\",\n      \"email\": \"admin@testcompany.com\",\n      \"firstName\": \"Admin\",\n      \"lastName\": \"User\",\n      \"role\": \"admin\",\n      \"organization\": {\n        \"id\": \"507f1f77bcf86cd799439012\",\n        \"name\": \"Test Company\",\n        \"slug\": \"test-company\"\n      }\n    }\n  }\n}"
+              }
+            ]
+          },
+          {
+            "name": "Login",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "if (pm.response.code === 200) {",
+                    "    const response = pm.response.json();",
+                    "    pm.collectionVariables.set('jwt_token', response.data.token);",
+                    "    pm.collectionVariables.set('user_id', response.data.user.id);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"admin@testcompany.com\",\n  \"password\": \"AdminPassword123!\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/auth/login",
+                "host": ["{{base_url}}"],
+                "path": ["auth", "login"]
+              },
+              "description": "Login with email and password"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Profile",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/auth/profile",
+                "host": ["{{base_url}}"],
+                "path": ["auth", "profile"]
+              },
+              "description": "Get current user profile"
+            },
+            "response": []
+          },
+          {
+            "name": "Change Password",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"currentPassword\": \"AdminPassword123!\",\n  \"newPassword\": \"NewAdminPassword123!\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/auth/change-password",
+                "host": ["{{base_url}}"],
+                "path": ["auth", "change-password"]
+              },
+              "description": "Change user password"
+            },
+            "response": []
+          },
+          {
+            "name": "Logout",
+            "request": {
+              "method": "POST",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/auth/logout",
+                "host": ["{{base_url}}"],
+                "path": ["auth", "logout"]
+              },
+              "description": "Logout user (logs the action)"
+            },
+            "response": []
+          }
+        ],
+        "description": "Authentication endpoints for user registration, login, and profile management"
+      },
+      {
+        "name": "User Management",
+        "item": [
+          {
+            "name": "Get All Users",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/users?page=1&limit=10&role=user&search=",
+                "host": ["{{base_url}}"],
+                "path": ["users"],
+                "query": [
+                  {
+                    "key": "page",
+                    "value": "1"
+                  },
+                  {
+                    "key": "limit",
+                    "value": "10"
+                  },
+                  {
+                    "key": "role",
+                    "value": "user"
+                  },
+                  {
+                    "key": "search",
+                    "value": ""
+                  }
+                ]
+              },
+              "description": "Get all users in organization (Admin/Manager only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Single User",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/users/{{user_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["users", "{{user_id}}"]
+              },
+              "description": "Get single user details"
+            },
+            "response": []
+          },
+          {
+            "name": "Create User",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"user@testcompany.com\",\n  \"password\": \"UserPassword123!\",\n  \"firstName\": \"Regular\",\n  \"lastName\": \"User\",\n  \"role\": \"user\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/users",
+                "host": ["{{base_url}}"],
+                "path": ["users"]
+              },
+              "description": "Create new user (Admin only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Update User",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Name\",\n  \"role\": \"manager\",\n  \"isActive\": true\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/users/{{user_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["users", "{{user_id}}"]
+              },
+              "description": "Update user details"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete User",
+            "request": {
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/users/{{user_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["users", "{{user_id}}"]
+              },
+              "description": "Delete user (Admin only)"
+            },
+            "response": []
+          }
+        ],
+        "description": "User management endpoints for CRUD operations"
+      },
+      {
+        "name": "Organization Management",
+        "item": [
+          {
+            "name": "Get Organization",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/organizations",
+                "host": ["{{base_url}}"],
+                "path": ["organizations"]
+              },
+              "description": "Get current organization details"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Organization",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Updated Company Name\",\n  \"description\": \"Updated company description\",\n  \"domain\": \"company.com\",\n  \"settings\": {\n    \"maxUsers\": 100,\n    \"features\": [\"projects\", \"analytics\", \"integrations\"]\n  }\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/organizations",
+                "host": ["{{base_url}}"],
+                "path": ["organizations"]
+              },
+              "description": "Update organization details (Admin only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Organization Stats",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/organizations/stats",
+                "host": ["{{base_url}}"],
+                "path": ["organizations", "stats"]
+              },
+              "description": "Get organization statistics (Admin/Manager only)"
+            },
+            "response": []
+          }
+        ],
+        "description": "Organization management endpoints"
+      },
+      {
+        "name": "Project Management",
+        "item": [
+          {
+            "name": "Get All Projects",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/projects?page=1&limit=10&status=active&search=",
+                "host": ["{{base_url}}"],
+                "path": ["projects"],
+                "query": [
+                  {
+                    "key": "page",
+                    "value": "1"
+                  },
+                  {
+                    "key": "limit",
+                    "value": "10"
+                  },
+                  {
+                    "key": "status",
+                    "value": "active"
+                  },
+                  {
+                    "key": "search",
+                    "value": ""
+                  }
+                ]
+              },
+              "description": "Get all projects with tenant isolation"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Single Project",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/projects/{{project_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["projects", "{{project_id}}"]
+              },
+              "description": "Get single project details"
+            },
+            "response": []
+          },
+          {
+            "name": "Create Project",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "if (pm.response.code === 201) {",
+                    "    const response = pm.response.json();",
+                    "    pm.collectionVariables.set('project_id', response.data.project._id);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Test Project\",\n  \"description\": \"A test project for demonstration\",\n  \"members\": [\n    {\n      \"userId\": \"{{user_id}}\",\n      \"role\": \"contributor\"\n    }\n  ]\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/projects",
+                "host": ["{{base_url}}"],
+                "path": ["projects"]
+              },
+              "description": "Create new project (Admin/Manager only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Update Project",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Updated Project Name\",\n  \"description\": \"Updated project description\",\n  \"status\": \"active\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/projects/{{project_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["projects", "{{project_id}}"]
+              },
+              "description": "Update project details"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete Project",
+            "request": {
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/projects/{{project_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["projects", "{{project_id}}"]
+              },
+              "description": "Delete project"
+            },
+            "response": []
+          }
+        ],
+        "description": "Project management endpoints with role-based access"
+      },
+      {
+        "name": "API Key Management",
+        "item": [
+          {
+            "name": "Get All API Keys",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api-keys?page=1&limit=10&isActive=true",
+                "host": ["{{base_url}}"],
+                "path": ["api-keys"],
+                "query": [
+                  {
+                    "key": "page",
+                    "value": "1"
+                  },
+                  {
+                    "key": "limit",
+                    "value": "10"
+                  },
+                  {
+                    "key": "isActive",
+                    "value": "true"
+                  }
+                ]
+              },
+              "description": "Get all API keys for organization (Admin/Manager only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Generate API Key",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "if (pm.response.code === 201) {",
+                    "    const response = pm.response.json();",
+                    "    pm.collectionVariables.set('api_key', response.data.apiKey.fullKey);",
+                    "    pm.collectionVariables.set('api_key_id', response.data.apiKey.id);",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Integration API Key\",\n  \"permissions\": [\"read\", \"write\"],\n  \"scopes\": [\"projects\", \"users\"],\n  \"expiresIn\": \"90d\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/api-keys",
+                "host": ["{{base_url}}"],
+                "path": ["api-keys"]
+              },
+              "description": "Generate new API key (Admin/Manager only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Single API Key",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api-keys/{{api_key_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["api-keys", "{{api_key_id}}"]
+              },
+              "description": "Get single API key details"
+            },
+            "response": []
+          },
+          {
+            "name": "Update API Key",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Updated API Key Name\",\n  \"permissions\": [\"read\"],\n  \"scopes\": [\"projects\"]\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/api-keys/{{api_key_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["api-keys", "{{api_key_id}}"]
+              },
+              "description": "Update API key details"
+            },
+            "response": []
+          },
+          {
+            "name": "Revoke API Key",
+            "request": {
+              "method": "PATCH",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api-keys/{{api_key_id}}/revoke",
+                "host": ["{{base_url}}"],
+                "path": ["api-keys", "{{api_key_id}}", "revoke"]
+              },
+              "description": "Revoke API key (deactivate)"
+            },
+            "response": []
+          },
+          {
+            "name": "Delete API Key",
+            "request": {
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/api-keys/{{api_key_id}}",
+                "host": ["{{base_url}}"],
+                "path": ["api-keys", "{{api_key_id}}"]
+              },
+              "description": "Permanently delete API key (Admin only)"
+            },
+            "response": []
+          }
+        ],
+        "description": "API key management for external integrations"
+      },
+      {
+        "name": "External API (API Key Auth)",
+        "item": [
+          {
+            "name": "Get Projects (External)",
+            "request": {
+              "auth": {
+                "type": "noauth"
+              },
+              "method": "GET",
+              "header": [
+                {
+                  "key": "X-API-Key",
+                  "value": "{{api_key}}",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/external/projects",
+                "host": ["{{base_url}}"],
+                "path": ["external", "projects"]
+              },
+              "description": "Get projects using API key authentication"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Users (External)",
+            "request": {
+              "auth": {
+                "type": "noauth"
+              },
+              "method": "GET",
+              "header": [
+                {
+                  "key": "X-API-Key",
+                  "value": "{{api_key}}",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/external/users",
+                "host": ["{{base_url}}"],
+                "path": ["external", "users"]
+              },
+              "description": "Get users using API key authentication"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Organization (External)",
+            "request": {
+              "auth": {
+                "type": "noauth"
+              },
+              "method": "GET",
+              "header": [
+                {
+                  "key": "X-API-Key",
+                  "value": "{{api_key}}",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/external/organization",
+                "host": ["{{base_url}}"],
+                "path": ["external", "organization"]
+              },
+              "description": "Get organization using API key authentication"
+            },
+            "response": []
+          }
+        ],
+        "description": "External API endpoints that use API key authentication"
+      },
+      {
+        "name": "Audit Logs",
+        "item": [
+          {
+            "name": "Get Audit Logs",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/audit?page=1&limit=20&action=LOGIN_SUCCESS&startDate=2024-01-01&endDate=2024-12-31&search=&sortBy=timestamp&sortOrder=desc",
+                "host": ["{{base_url}}"],
+                "path": ["audit"],
+                "query": [
+                  {
+                    "key": "page",
+                    "value": "1"
+                  },
+                  {
+                    "key": "limit",
+                    "value": "20"
+                  },
+                  {
+                    "key": "action",
+                    "value": "LOGIN_SUCCESS"
+                  },
+                  {
+                    "key": "startDate",
+                    "value": "2024-01-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2024-12-31"
+                  },
+                  {
+                    "key": "search",
+                    "value": ""
+                  },
+                  {
+                    "key": "sortBy",
+                    "value": "timestamp"
+                  },
+                  {
+                    "key": "sortOrder",
+                    "value": "desc"
+                  }
+                ]
+              },
+              "description": "Get audit logs with filtering (Admin/Manager only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Audit Actions",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/audit/actions",
+                "host": ["{{base_url}}"],
+                "path": ["audit", "actions"]
+              },
+              "description": "Get available audit log actions"
+            },
+            "response": []
+          },
+          {
+            "name": "Get Audit Statistics",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/audit/stats?days=30",
+                "host": ["{{base_url}}"],
+                "path": ["audit", "stats"],
+                "query": [
+                  {
+                    "key": "days",
+                    "value": "30"
+                  }
+                ]
+              },
+              "description": "Get audit log statistics (Admin/Manager only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Export Audit Logs (JSON)",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/audit/export?format=json&startDate=2024-01-01&endDate=2024-12-31",
+                "host": ["{{base_url}}"],
+                "path": ["audit", "export"],
+                "query": [
+                  {
+                    "key": "format",
+                    "value": "json"
+                  },
+                  {
+                    "key": "startDate",
+                    "value": "2024-01-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2024-12-31"
+                  }
+                ]
+              },
+              "description": "Export audit logs as JSON (Admin only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Export Audit Logs (CSV)",
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{base_url}}/audit/export?format=csv&startDate=2024-01-01&endDate=2024-12-31",
+                "host": ["{{base_url}}"],
+                "path": ["audit", "export"],
+                "query": [
+                  {
+                    "key": "format",
+                    "value": "csv"
+                  },
+                  {
+                    "key": "startDate",
+                    "value": "2024-01-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2024-12-31"
+                  }
+                ]
+              },
+              "description": "Export audit logs as CSV (Admin only)"
+            },
+            "response": []
+          },
+          {
+            "name": "Cleanup Old Audit Logs",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"olderThanDays\": 365\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/audit/cleanup",
+                "host": ["{{base_url}}"],
+                "path": ["audit", "cleanup"]
+              },
+              "description": "Delete old audit logs (Admin only, minimum 90 days)"
+            },
+            "response": []
+          }
+        ],
+        "description": "Audit log management and viewing endpoints"
+      }
+    ],
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "// Add timestamp to requests",
+            "pm.request.headers.add({",
+            "    key: 'X-Request-Time',",
+            "    value: new Date().toISOString()",
+            "});"
+          ]
+        }
+      },
+      {
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "// Global test to check response time",
+            "pm.test('Response time is less than 2000ms', function () {",
+            "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+            "});",
+            "",
+            "// Global test to check for proper JSON response",
+            "pm.test('Response is JSON', function () {",
+            "    pm.response.to.have.header('Content-Type');",
+            "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+            "});"
+          ]
+        }
+      }
+    ]
+  }
+  
